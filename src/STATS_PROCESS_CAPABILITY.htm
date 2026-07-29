@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Process Capability Analysis</title>
+  <style type="text/css">
+
+  <!--
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}
+  .name {font-style: italic}
+  .runinhead {font-weight: bold}
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+  -->
+  </style>
+</head>
+
+<body>
+  <h1>Process Capability Analysis</h1>
+
+  <p>Use this procedure to assess whether a process is operating within its specified engineering or quality limits. Given one or more continuous measurement variables, it computes the full suite of process capability and performance indices (Cp, Cpk, Pp, Ppk, Cpm), along with supporting statistics including parts per million (PPM) defective, defects per million opportunities (DPMO), sigma level (Z-bench), yield, percentiles, skewness, kurtosis, and confidence intervals.</p>
+
+  <p>The procedure requires at least one specification limit (LSL or USL) to compute capability indices. A target value (T) is required for the Cpm index. Select the process variable(s) to analyze on the main tab. Optionally, a grouping variable can be specified to compute within-subgroup (short-term) sigma estimates; without a grouping variable, individual moving ranges are used for within-subgroup estimation.</p>
+
+  <p>All analyses are produced variable by variable. Missing values are deleted listwise within each variable. Only variables with a scale (numeric continuous) measurement level should be analyzed. At least 2 non-missing observations are required per variable; fewer than 30 observations will produce a warning, as capability indices are unreliable with very small samples.</p>
+
+  <p>Output includes SPSS pivot tables in the Output Viewer plus an interactive HTML dashboard that summarizes key indices, gauge indicators, and distribution plots in a self-contained report file. The HTML report can optionally include a company logo and analyst identification fields.</p>
+
+  <h2>Variables Tab</h2>
+
+  <p>Move one or more continuous process measurement variables into the <span class="screen">Process Variable(s)</span> list. These are the measurements to be evaluated for conformance to specification limits. All listed variables are analyzed independently; each produces its own set of output tables, charts, and HTML report section.</p>
+
+  <p>Optionally, move a categorical grouping variable into the <span class="screen">Subgroup (Grouping) Variable</span> field. The grouping variable defines rational subgroups (e.g., machine shift, production batch, time period) used to estimate within-subgroup (short-term) process sigma. Within-subgroup sigma is used to compute potential capability indices (Cp, Cpk) that reflect the process's inherent variation, separate from between-subgroup drift. If no grouping variable is specified, within-subgroup sigma is estimated from individual consecutive moving ranges (MR-bar method).</p>
+
+  <h2>Specification Limits and Target</h2>
+
+  <p>Enter the engineering or quality specification limits that define conforming process output. At least one of LSL or USL must be provided to compute capability indices. If only one limit is provided, one-sided capability indices are computed where applicable.</p>
+
+  <p><span class="runinhead">Lower Specification Limit (LSL).</span> The minimum acceptable value for the process characteristic. Values below this limit are nonconforming.</p>
+
+  <p><span class="runinhead">Upper Specification Limit (USL).</span> The maximum acceptable value for the process characteristic. Values above this limit are nonconforming.</p>
+
+  <p><span class="runinhead">Target (T).</span> The nominal or ideal value of the process characteristic, typically the midpoint of the specification range. The target is required to compute the Cpm (Taguchi) index. If not specified, Cpm is not computed.</p>
+
+  <h2>Sigma Multiplier</h2>
+
+  <p>The sigma multiplier defines the number of standard deviations used in the tolerance interval for capability calculations. The default and most widely used value is <span class="screen">6</span>, corresponding to ±3&sigma; on each side of the process mean. This is the basis for the "six sigma" quality philosophy, under which a perfectly centred process at Cp = 1.000 produces 2,700 defects per million.</p>
+
+  <p>Other common choices include <span class="screen">3</span> (±1.5&sigma;, used in some one-sided or tighter-tolerance settings) and <span class="screen">4</span> (±2&sigma;). A <span class="screen">Custom</span> value may be entered for non-standard applications. The sigma multiplier divides the specification width when computing Cp and related indices: Cp = (USL &minus; LSL) / (sigma_multiplier &times; &sigma;).</p>
+
+  <p>Note that Cpm is always computed using a fixed divisor of 6&sigma; per ISO 22514, regardless of the sigma multiplier selected here.</p>
+
+  <h2>Within-Sigma Estimation Method</h2>
+
+  <p>Short-term (within-subgroup) sigma is estimated from the data using one of four methods. This sigma estimate is used to compute potential capability indices (Cp, Cpk) which reflect the process's inherent (best-case) variation.</p>
+
+  <p><span class="runinhead">Pooled Standard Deviation (POOLED).</span> Computes the pooled within-subgroup standard deviation across all subgroups defined by the grouping variable. This is the most statistically efficient estimator when subgroup sizes are approximately equal and is the AIAG default for variable subgroup sizes. Requires a grouping variable.</p>
+
+  <p><span class="runinhead">R-bar / d2 (RBAR).</span> Estimates within-subgroup sigma from the average subgroup range divided by the control chart unbiasing constant d<span class="subscript">2</span>. Appropriate for small, fixed subgroup sizes (typically n = 2 to 8). Requires a grouping variable.</p>
+
+  <p><span class="runinhead">S-bar / c4 (SBAR).</span> Estimates within-subgroup sigma from the average subgroup standard deviation divided by the unbiasing constant c<span class="subscript">4</span>. Generally preferred over R-bar for subgroup sizes greater than 8. Requires a grouping variable.</p>
+
+  <p><span class="runinhead">Moving Range / d2 (MRBAR).</span> Estimates within-subgroup sigma from the average consecutive moving range of individual observations (MR-bar), divided by d<span class="subscript">2</span> = 1.128. This is the default method when no grouping variable is specified, and is appropriate for individual measurement data (subgroup size = 1). It captures only short-term, point-to-point variation.</p>
+
+  <h2>Confidence Level</h2>
+
+  <p>Specify the confidence level to use for all interval estimates. The default is <span class="screen">0.95</span> (95%). This level applies to confidence intervals for the process mean, standard deviation, and Cpk index when the corresponding interval options are selected. Enter a value strictly between 0 and 1 (e.g., 0.90 for 90%, 0.99 for 99%).</p>
+
+  <h2>Statistics Tab</h2>
+
+  <p>Select the optional statistics to include in the output pivot tables. All statistics are computed per process variable.</p>
+
+  <p><span class="runinhead">Normality Tests.</span> Computes up to four formal tests of the normality assumption for the process data: Anderson-Darling, Shapiro-Wilk, Lilliefors (Kolmogorov-Smirnov), and Jarque-Bera. A normality assessment table is produced showing the test statistic, degrees of freedom, and p-value for each test, along with an overall normality verdict. Because capability indices Cp, Cpk, Pp, and Ppk assume a normal process distribution, significant departures from normality should prompt consideration of the Box-Cox transformation or the Distribution Advisor.</p>
+
+  <p><span class="runinhead">PPM (Parts Per Million).</span> Reports observed and expected nonconforming parts per million. Expected PPM is computed from the fitted normal distribution using both within-subgroup (potential) and overall (actual) sigma, separately for the LSL tail, USL tail, and total. Observed PPM counts actual out-of-specification values in the sample.</p>
+
+  <p><span class="runinhead">Cpm (Taguchi Index).</span> Computes the Cpm capability index, which accounts for process deviation from the target value T in addition to process spread. Requires a target value. If no target is specified this option is ignored.</p>
+
+  <p><span class="runinhead">Z-Bench (Sigma Level).</span> Reports the benchmark Z score for the process. Z<span class="subscript">LT</span> (long-term Z, or Z-bench overall) is derived from total expected PPM; Z<span class="subscript">ST</span> (short-term Z) adds the industry-standard 1.5-sigma shift: Z<span class="subscript">ST</span> = Z<span class="subscript">LT</span> + 1.5. Both within-based and overall-based sigma-level values are reported.</p>
+
+  <p><span class="runinhead">DPMO.</span> Reports Defects Per Million Opportunities, numerically identical to total expected PPM when each measurement opportunity produces at most one defect opportunity.</p>
+
+  <p><span class="runinhead">Yield.</span> Reports the expected process yield as a percentage: Yield = (1 &minus; total expected PPM / 1,000,000) &times; 100. Both within-based and overall-based yields are reported.</p>
+
+  <p><span class="runinhead">Skewness and Kurtosis.</span> Reports the sample skewness and excess kurtosis of the process data, with their standard errors. Skewness near zero and kurtosis near zero are consistent with normality. Large absolute values indicate distributional shape departures that may invalidate standard capability indices.</p>
+
+  <p><span class="runinhead">Percentiles.</span> Reports the 0.135th, 50th (median), and 99.865th percentiles of the data. These percentiles correspond to &minus;3&sigma; and +3&sigma; under normality and allow a distribution-free assessment of the proportion of data within the specification range.</p>
+
+  <p><span class="runinhead">I-MR Control Limits.</span> Computes and reports the control limits (UCL, CL, LCL) for an Individuals (X) and Moving Range (MR) control chart, based on the within-subgroup sigma estimate. Useful for monitoring process stability.</p>
+
+  <p><span class="runinhead">Outliers.</span> Identifies observations that fall more than 3 within-subgroup standard deviations from the process mean. Outlier counts and the flagged observation indices are reported.</p>
+
+  <p><span class="runinhead">CI for Mean.</span> Reports a two-sided confidence interval for the process mean at the selected confidence level.</p>
+
+  <p><span class="runinhead">CI for Std Dev.</span> Reports a chi-squared-based confidence interval for the process standard deviation (both within and overall) at the selected confidence level.</p>
+
+  <p><span class="runinhead">CI for Cpk.</span> Reports a normal-theory approximate confidence interval for the Cpk index at the selected confidence level, using the standard asymptotic variance formula.</p>
+
+  <h2>Options Tab</h2>
+
+  <p><span class="runinhead">Box-Cox Transformation.</span> When selected, the procedure automatically searches for the optimal Box-Cox power transformation parameter (&lambda;) that best normalises the process data, using maximum likelihood estimation over a grid of candidate &lambda; values from &minus;2 to 2. Capability indices are then computed on the transformed scale and back-transformed results are reported where possible. This option is useful when normality tests indicate significant non-normality. The estimated &lambda; and its 95% confidence interval are reported.</p>
+
+  <p><span class="runinhead">Benchmark Comparison.</span> When selected, the capability indices are compared against standard industry benchmark thresholds. A colour-coded report card table is produced showing whether each index meets or exceeds typical minimum acceptable levels (e.g., Cpk &ge; 1.33 for a capable process, Cpk &ge; 1.67 for a highly capable process) and Six Sigma levels.</p>
+
+  <p><span class="runinhead">HTML Report Card.</span> Produces an interactive HTML summary dashboard for each process variable. The dashboard includes a gauge visualization of the overall process score, colour-coded capability index summary table, distribution plot with specification limit overlays, and key performance metrics (PPM, Yield, Sigma Level). The HTML file is saved to the SPSS default output directory. Report metadata (analyst name, reviewer, company) can be set on the Report tab.</p>
+
+  <h2>Charts Tab</h2>
+
+  <p>Select the charts to produce. All charts are rendered as high-resolution graphics in the SPSS Output Viewer. Charts are produced per process variable.</p>
+
+  <p><span class="runinhead">Histogram with Normal Curve.</span> A histogram of the process data with a fitted normal density curve overlaid, along with vertical reference lines for the process mean, LSL, USL, and ±3&sigma; boundaries. The histogram provides an immediate visual assessment of process centring, spread, and shape relative to the specification limits.</p>
+
+  <p><span class="runinhead">Normal Probability Plot.</span> A Q-Q plot of the ordered process data against normal quantiles. Points following a straight diagonal line support the normality assumption. Systematic curvature, S-shapes, or outlier points at the extremes indicate departures from normality that may affect the validity of capability indices.</p>
+
+  <p><span class="runinhead">Capability Plot.</span> A combined chart showing the process data distribution (histogram and/or kernel density estimate) with specification limits, process mean, and ±3&sigma; lines. The capability plot is the standard graphical output for process capability studies and gives an at-a-glance view of how well the process fits within its tolerance band.</p>
+
+  <p><span class="runinhead">Run Chart.</span> A time-order sequence plot of the individual measurements against their observation order (or subgroup number if a grouping variable is specified). The process mean is shown as a centre line. Run charts reveal trends, shifts, cycles, and other non-random patterns that indicate process instability and may invalidate capability indices calculated under the assumption of a stable, in-control process.</p>
+
+  <p><span class="runinhead">Box Plot.</span> A box-and-whisker plot of the process data, optionally split by subgroup if a grouping variable is specified. The box plot summarises the five-number summary (minimum, Q1, median, Q3, maximum) and flags potential outliers as individual points beyond the whiskers (1.5 &times; IQR). Useful for comparing distribution shape and spread across subgroups.</p>
+
+  <p><span class="runinhead">Summary Report Chart.</span> A composite chart panel that consolidates the capability histogram, normal probability plot, run chart, and key index values into a single graphical summary suitable for inclusion in quality reports or presentations. This is the most information-dense single output of the procedure.</p>
+
+  <p><span class="runinhead">I-MR Chart.</span> An Individuals and Moving Range (I-MR) control chart. The Individuals chart plots each observation with UCL and LCL control limits; the Moving Range chart plots the consecutive absolute differences between observations with its own control limits. Points outside control limits or non-random patterns indicate the process is not in statistical control, a prerequisite for valid capability analysis.</p>
+
+  <p><span class="runinhead">Violin Plot.</span> A violin plot combines a box plot with a mirrored kernel density estimate, showing the full distributional shape, median, interquartile range, and data spread simultaneously. Violin plots are particularly effective for comparing the shape of process distributions across subgroups.</p>
+
+  <p><span class="runinhead">Kernel Density Estimate (KDE).</span> A smooth non-parametric density estimate of the process data using a Gaussian kernel with bandwidth selected by Silverman's rule. Overlaid with the specification limits, the KDE provides a flexible representation of the process distribution that does not impose the normality assumption of the histogram normal curve.</p>
+
+  <p><span class="runinhead">Six-Pack Chart.</span> The process capability six-pack displays six standard diagnostic charts in a single panel: run chart, I chart, MR chart, histogram with capability, normal Q-Q plot, and a capability indices summary. The six-pack is the standard comprehensive graphical summary used in AIAG capability studies and provides everything needed to assess process stability and capability in one view.</p>
+
+  <h2>Distribution Advisor Tab</h2>
+
+  <p>The Distribution Advisor fits up to 16 candidate probability distributions to the process data and identifies the best-fitting family. This is valuable when normality tests indicate significant departures from normality or when the process is known to produce skewed or bounded data (e.g., cycle times, concentrations, surface roughness).</p>
+
+  <p><span class="runinhead">Enable Distribution Advisor.</span> When checked, the procedure fits all candidate distributions and produces a ranked comparison table showing goodness-of-fit statistics (AIC, BIC, and a composite score) for each distribution.</p>
+
+  <p><span class="runinhead">Significance Level.</span> The alpha level used for the goodness-of-fit tests within the Distribution Advisor. Default is 0.05. This controls the threshold for flagging distributions as a poor fit.</p>
+
+  <p><span class="runinhead">Include 3-Parameter Distributions.</span> When checked, three-parameter variants of the Weibull, lognormal, and gamma distributions (which include a location/threshold parameter) are added to the candidate set. Three-parameter distributions can fit data that does not start at zero but are more prone to overfitting with small samples.</p>
+
+  <p><span class="runinhead">Apply Best-Fit Transform (PIT Transform).</span> When checked and a best-fit distribution is identified, the Probability Integral Transform (PIT) is applied to map the process data to a uniform distribution, then to a standard normal distribution, and distribution-adjusted capability indices are computed on the transformed scale. The PIT transform is a theoretically exact normalisation when the correct distribution family is used, and provides capability indices that are valid regardless of the original data distribution.</p>
+
+  <h2>Report Tab</h2>
+
+  <p>These fields populate the header of the HTML dashboard report produced when the <span class="screen">HTML Report Card</span> option is enabled.</p>
+
+  <p><span class="runinhead">Prepared By.</span> Name of the analyst or engineer who conducted the capability study.</p>
+
+  <p><span class="runinhead">Reviewed By.</span> Name of the quality manager or reviewer.</p>
+
+  <p><span class="runinhead">Company / Organisation.</span> Organisation name to appear in the report header.</p>
+
+  <p><span class="runinhead">Logo Path.</span> Full file path to a PNG or JPG logo image to embed in the report header. Leave blank to omit the logo.</p>
+
+  <p><span class="runinhead">Export Logs.</span> When checked, internal diagnostic log messages are appended to the HTML report. Intended for troubleshooting.</p>
+
+  <h2>Data Generation Tab</h2>
+
+  <p>This tab allows the procedure to generate a simulated normal dataset for demonstration or teaching purposes instead of analysing existing data. When enabled, the procedure ignores any variables specified on the Variables tab and instead generates a random normal sample with the specified parameters.</p>
+
+  <p><span class="runinhead">Generate Simulated Data.</span> Check to activate data generation mode.</p>
+
+  <p><span class="runinhead">Sample Size.</span> Number of observations to generate. Default is 100.</p>
+
+  <p><span class="runinhead">Mean.</span> Population mean of the simulated normal distribution. Default is 10.0.</p>
+
+  <p><span class="runinhead">Standard Deviation.</span> Population standard deviation of the simulated normal distribution. Default is 1.0.</p>
+
+  <h1>Information on the Capability Indices</h1>
+
+  <p>Process capability indices quantify the relationship between the natural variability of a process and its engineering specification limits. They are computed under the assumption that the process is in statistical control (stable over time) and that the process output follows a normal distribution. Indices based on within-subgroup sigma (&sigma;<span class="subscript">W</span>) measure <i>potential</i> (short-term) capability, while indices based on overall sigma (&sigma;<span class="subscript">T</span>) measure <i>actual</i> (long-term) performance. Higher values indicate better capability; a value of 1.00 means the process spread exactly fills the specification tolerance.</p>
+
+  <h2>Cp &mdash; Process Capability Index</h2>
+
+  <p>Cp (also written C<span class="subscript">p</span>) measures the potential capability of the process by comparing the specification width to the process spread, using within-subgroup sigma. It does not account for process centring.</p>
+
+  <p>Cp = (USL &minus; LSL) / (sigma_multiplier &times; &sigma;<span class="subscript">W</span>)</p>
+
+  <p>A Cp of 1.00 means the process spread equals the specification tolerance (&plusmn;3&sigma; boundaries just touch the spec limits). Cp &ge; 1.33 is a common minimum standard for a capable process; Cp &ge; 1.67 indicates a highly capable process. Cp requires both LSL and USL; it is not defined for one-sided specifications.</p>
+
+  <p><i>Example</i>: A turning operation produces shaft diameters with LSL = 49.5 mm and USL = 50.5 mm (tolerance = 1.0 mm). The within-subgroup standard deviation is &sigma;<span class="subscript">W</span> = 0.12 mm. Cp = 1.0 / (6 &times; 0.12) = 1.39, indicating a capable process whose natural spread fits comfortably within the tolerance.</p>
+
+  <h2>Cpk &mdash; Process Capability Index (Centring-Adjusted)</h2>
+
+  <p>Cpk adjusts Cp for the actual process centring by taking the minimum of the upper and lower one-sided indices:</p>
+
+  <p>Cpu = (USL &minus; &mu;) / (sigma_multiplier/2 &times; &sigma;<span class="subscript">W</span>)&nbsp;&nbsp;&nbsp;Cpl = (&mu; &minus; LSL) / (sigma_multiplier/2 &times; &sigma;<span class="subscript">W</span>)</p>
+  <p>Cpk = min(Cpu, Cpl)</p>
+
+  <p>Cpk &le; Cp always; equality holds only when the process is perfectly centred at the midpoint of the specification range. Cpk can be negative if the process mean is outside a specification limit. The same benchmark thresholds apply: Cpk &ge; 1.33 for capability, &ge; 1.67 for high capability.</p>
+
+  <p><i>Example</i>: Using the shaft example above with &sigma;<span class="subscript">W</span> = 0.12 mm and process mean &mu; = 50.15 mm: Cpu = (50.5 &minus; 50.15) / 0.36 = 0.97, Cpl = (50.15 &minus; 49.5) / 0.36 = 1.81, Cpk = min(0.97, 1.81) = 0.97. The process is not capable despite adequate spread (Cp = 1.39) because the mean is shifted toward the upper limit.</p>
+
+  <h2>Pp &mdash; Process Performance Index</h2>
+
+  <p>Pp is the performance analogue of Cp, computed using overall (total) standard deviation &sigma;<span class="subscript">T</span> instead of within-subgroup sigma. It reflects actual long-term process performance including between-subgroup variation (e.g., tool wear, raw material variation, operator differences).</p>
+
+  <p>Pp = (USL &minus; LSL) / (sigma_multiplier &times; &sigma;<span class="subscript">T</span>)</p>
+
+  <p>Because &sigma;<span class="subscript">T</span> &ge; &sigma;<span class="subscript">W</span>, Pp &le; Cp. A large gap between Cp and Pp indicates significant between-subgroup variation that should be investigated. Pp requires both LSL and USL.</p>
+
+  <p><i>Example</i>: In the shaft example, if the overall standard deviation across all subgroups is &sigma;<span class="subscript">T</span> = 0.18 mm (higher than &sigma;<span class="subscript">W</span> = 0.12 due to between-batch variation), then Pp = 1.0 / (6 &times; 0.18) = 0.93. The process does not meet performance requirements even though its potential capability is adequate.</p>
+
+  <h2>Ppk &mdash; Process Performance Index (Centring-Adjusted)</h2>
+
+  <p>Ppk is the performance analogue of Cpk, using overall sigma for both spread and centering assessment:</p>
+
+  <p>Ppu = (USL &minus; &mu;) / (sigma_multiplier/2 &times; &sigma;<span class="subscript">T</span>)&nbsp;&nbsp;&nbsp;Ppl = (&mu; &minus; LSL) / (sigma_multiplier/2 &times; &sigma;<span class="subscript">T</span>)</p>
+  <p>Ppk = min(Ppu, Ppl)</p>
+
+  <p>Ppk represents the actual long-term centring-adjusted capability. It is the most conservative of the four basic indices and most directly predicts the fraction of nonconforming output observed in practice.</p>
+
+  <p><i>Example</i>: With &mu; = 50.15 mm and &sigma;<span class="subscript">T</span> = 0.18 mm: Ppu = (50.5 &minus; 50.15) / 0.54 = 0.65, Ppl = (50.15 &minus; 49.5) / 0.54 = 1.20, Ppk = 0.65. The actual long-term performance is poor; corrective action on both centring and between-batch variation is needed.</p>
+
+  <h2>Cpm &mdash; Taguchi Capability Index</h2>
+
+  <p>Cpm (also called the Taguchi index) penalises deviation of the process mean from the target value T, not just from the nearest specification limit. It is defined as:</p>
+
+  <p>Cpm = (USL &minus; LSL) / (6 &times; &tau;)&nbsp;&nbsp;&nbsp;where&nbsp;&nbsp;&tau;<span class="superscript">2</span> = &sigma;<span class="subscript">T</span><span class="superscript">2</span> + (&mu; &minus; T)<span class="superscript">2</span></p>
+
+  <p>The denominator 6 is fixed per ISO 22514 regardless of the sigma multiplier setting. When &mu; = T, Cpm = Pp. As the mean moves away from the target, Cpm decreases faster than Pp, directly reflecting the economic loss from off-target production. Cpm requires a target value T and both specification limits.</p>
+
+  <p><i>Example</i>: With LSL = 49.5, USL = 50.5, T = 50.0 (midpoint), &mu; = 50.15, &sigma;<span class="subscript">T</span> = 0.18 mm: &tau;<span class="superscript">2</span> = 0.18<span class="superscript">2</span> + (50.15 &minus; 50.0)<span class="superscript">2</span> = 0.0324 + 0.0225 = 0.0549, &tau; = 0.234. Cpm = 1.0 / (6 &times; 0.234) = 0.71. The off-target mean significantly degrades the Taguchi index relative to Pp = 0.93.</p>
+
+  <h1>Information on the Normality Tests</h1>
+
+  <p>Standard capability indices (Cp, Cpk, Pp, Ppk) are derived under the assumption that the process follows a normal distribution. Formal normality tests assess the null hypothesis that the data are drawn from a normal population. A significant result (small p-value, typically p &lt; 0.05) suggests departures from normality that may affect the validity of the indices. However, with large samples even trivial departures from normality become statistically significant, while with small samples the tests have low power. Graphical assessment (probability plots, histograms) should complement formal tests.</p>
+
+  <h2>Anderson-Darling Test</h2>
+
+  <p>The Anderson-Darling (AD) test is based on the weighted squared differences between the empirical cumulative distribution function (ECDF) of the sample and the cumulative distribution function of the fitted normal distribution. The weighting gives more emphasis to the tails than the Kolmogorov-Smirnov test, making the AD test more sensitive to tail departures from normality. The test statistic A<span class="superscript">2</span> is compared to critical values or converted to a p-value. Small p-values indicate non-normality.</p>
+
+  <p><i>Example</i>: In process capability analysis, the AD test is routinely applied to verify the normality assumption before reporting Cpk. If the process generates many near-zero measurements with an occasional large value (e.g., contamination events), the AD test will typically detect this right-skew and flag it with a significant result, prompting the analyst to consider a lognormal or Weibull capability model.</p>
+
+  <h2>Shapiro-Wilk Test</h2>
+
+  <p>The Shapiro-Wilk test evaluates normality by computing the ratio of the best linear unbiased estimator of the standard deviation (based on order statistic weights) to the usual sample standard deviation. Values of the test statistic W close to 1 support normality; values significantly below 1 indicate non-normality. The Shapiro-Wilk test is generally regarded as one of the most powerful omnibus tests for normality and is recommended for sample sizes up to 5000.</p>
+
+  <p><i>Example</i>: A quality engineer analysing fill weights from a bottling line applies the Shapiro-Wilk test to each production shift's sample (n = 25). A result of W = 0.91, p = 0.032 for the night shift but W = 0.97, p = 0.61 for the day shift suggests the night shift process may have a different distributional shape, warranting investigation of the filling equipment setup.</p>
+
+  <h2>Lilliefors (Kolmogorov-Smirnov) Test</h2>
+
+  <p>The Kolmogorov-Smirnov (K-S) test measures the maximum absolute difference between the ECDF of the sample and the CDF of the reference normal distribution. The Lilliefors correction applies when the normal distribution parameters are estimated from the data (as is always the case in capability analysis) rather than known in advance. Without the Lilliefors correction the K-S test is conservative (too lenient) when parameters are estimated. The Lilliefors test uses simulation-based critical values to account for parameter estimation.</p>
+
+  <p><i>Example</i>: A semiconductor manufacturer applies the Lilliefors test to wafer thickness measurements (n = 200). Because the population mean and standard deviation are unknown and estimated from the sample, the Lilliefors correction is essential; the raw K-S test without correction would understate the evidence against normality for these data.</p>
+
+  <h2>Jarque-Bera Test</h2>
+
+  <p>The Jarque-Bera (JB) test evaluates normality based on the sample skewness and excess kurtosis. Under normality, skewness = 0 and excess kurtosis = 0. The test statistic combines the squared skewness and squared excess kurtosis, scaled by the sample size, and follows an approximate chi-squared distribution with 2 degrees of freedom under the null hypothesis. The JB test is particularly sensitive to distributional shape (asymmetry and tail weight) rather than location or scale departures, complementing the tail-sensitive AD test.</p>
+
+  <p><i>Example</i>: Cycle time data from a service process is often right-skewed (most jobs complete quickly; a few take very long). The Jarque-Bera test will typically detect this skewness strongly, even when the K-S maximum-distance test may not flag the same departure as significant.</p>
+
+  <h1>Information on Distribution Fitting</h1>
+
+  <p>When process data are significantly non-normal, the Distribution Advisor fits a comprehensive set of candidate distributions and identifies the one that best describes the data. Capability indices computed under the correct distributional model are more accurate predictors of actual nonconformance rates than normal-theory indices applied to non-normal data.</p>
+
+  <h2>Candidate Distributions</h2>
+
+  <p>The Distribution Advisor evaluates up to 16 parametric families. Two-parameter families fitted are: Normal, Lognormal, Gamma, Weibull, Exponential, Beta, Logistic, Log-logistic, Cauchy, and Uniform. When the three-parameter option is enabled, three-parameter Weibull, Lognormal, and Gamma distributions (with a shift/threshold parameter) are also fitted. Each distribution is fitted by maximum likelihood estimation.</p>
+
+  <h2>Goodness-of-Fit Scoring</h2>
+
+  <p>Distributions are ranked by a composite scoring method that combines the Akaike Information Criterion (AIC), Bayesian Information Criterion (BIC), and the p-value from the Kolmogorov-Smirnov or Anderson-Darling goodness-of-fit test. AIC and BIC penalise model complexity (number of parameters) to prevent overfitting; lower AIC/BIC indicates a better-fitting, more parsimonious model. The composite score converts each criterion to a rank and averages across criteria, so that the top-ranked distribution performs consistently well across all three measures.</p>
+
+  <h2>Probability Integral Transform (PIT)</h2>
+
+  <p>Once the best-fitting distribution F(x) is identified, the Probability Integral Transform maps each observed value x<span class="subscript">i</span> to u<span class="subscript">i</span> = F(x<span class="subscript">i</span>), which is uniformly distributed on [0,1] if the model is correct. Applying the normal quantile function to u<span class="subscript">i</span> gives z<span class="subscript">i</span> = &Phi;<span class="superscript">&minus;1</span>(u<span class="subscript">i</span>), which is standard normally distributed. Capability indices computed on these z-values are distribution-free and correctly account for the actual shape of the process distribution. The distribution-based Cpk reported in the Distribution Advisor section of the HTML report is derived from this PIT approach and will generally differ from the normal-theory Cpk in the main output tables; this is by design and not a discrepancy.</p>
+
+  <h2>Box-Cox Transformation</h2>
+
+  <p>The Box-Cox power transformation family x<span class="superscript">(&lambda;)</span> = (x<span class="superscript">&lambda;</span> &minus; 1) / &lambda; (with the log transform as the limit &lambda; &rarr; 0) is a flexible parametric approach to normalising positively skewed data. The optimal &lambda; is estimated by maximum likelihood, maximising the log-likelihood of the transformed data under a normal model. After transformation, all standard normal-theory capability indices are computed on the transformed scale. The procedure reports the estimated &lambda;, its 95% confidence interval, and notes the interpretation (e.g., &lambda; &approx; 0 corresponds to a log transformation; &lambda; &approx; 0.5 to a square root transformation; &lambda; &approx; 1 indicates the data are already approximately normal).</p>
+
+  <p><i>Example</i>: Particulate contamination measurements from a cleanroom process are strongly right-skewed with values ranging from near-zero to several hundred. A Box-Cox analysis yields &lambda; = 0.18, close to a log transformation. Capability indices computed on the transformed data (and back-transformed for reporting) give a more accurate picture of the true nonconformance rate than normal-theory indices applied to the raw skewed data.</p>
+
+  <h1>Information on the Charts</h1>
+
+  <h2>Histogram with Normal Curve</h2>
+
+  <p>The histogram divides the data into equal-width bins and plots the frequency (or density) of observations in each bin. The overlaid normal curve is computed from the sample mean and within-subgroup standard deviation. Vertical reference lines mark the LSL, USL, process mean (&mu;), and the &plusmn;3&sigma;<span class="subscript">W</span> natural tolerance boundaries. When the normal curve extends visibly beyond the specification limits, the expected PPM nonconforming can be read qualitatively from the tail areas.</p>
+
+  <h2>Normal Probability (Q-Q) Plot</h2>
+
+  <p>The ordered sample quantiles are plotted against the theoretical quantiles of the standard normal distribution. Perfect normality produces a straight line. Systematic departure patterns are diagnostic: an S-shaped curve indicates heavier tails than normal (leptokurtosis or platykurtosis); a concave or convex curve indicates skewness; a step pattern indicates discreteness or rounding. Points near the extremes that deviate from the line often represent outliers or a second process stream.</p>
+
+  <h2>Run Chart</h2>
+
+  <p>The run chart plots each individual measurement in time order (or by observation index). A centre line at the process mean is shown. The run chart is the primary tool for assessing process stability before computing capability indices. Trends (consistent upward or downward movement), shifts (sudden changes in level), cycles, or clustering patterns all indicate that the process is not in statistical control and that capability indices computed from such data do not reliably predict future performance.</p>
+
+  <h2>I-MR Chart</h2>
+
+  <p>The Individuals (I) chart plots each observation with three-sigma control limits UCL = &mu; + 3&sigma;<span class="subscript">W</span> and LCL = &mu; &minus; 3&sigma;<span class="subscript">W</span>, computed from the within-subgroup (MR-bar-based) sigma estimate. The Moving Range (MR) chart plots the absolute difference between consecutive observations with its own UCL = D<span class="subscript">4</span> &times; MR-bar (D<span class="subscript">4</span> = 3.267 for n = 2). Points outside control limits flag individual out-of-control observations; systematic patterns within limits indicate assignable causes that do not produce extreme values.</p>
+
+  <h2>Capability Plot</h2>
+
+  <p>The capability plot overlays the process data distribution (histogram bars with normal density curve and/or KDE) on the specification window defined by LSL and USL. The display communicates at a glance whether the process distribution is centred within the tolerance and how much of the distribution tail extends beyond each limit. The within-sigma and overall-sigma fitted curves may both be shown to illustrate the gap between potential and actual capability.</p>
+
+  <h2>Box Plot</h2>
+
+  <p>The box plot shows the median (centre line), interquartile range (box), and whiskers extending to 1.5 &times; IQR beyond the quartiles. Observations beyond the whiskers are plotted individually as potential outliers. When a grouping variable is specified, side-by-side box plots are produced for each subgroup level, enabling visual comparison of subgroup medians and spreads.</p>
+
+  <h2>Violin Plot</h2>
+
+  <p>The violin plot augments the box plot with a mirrored kernel density estimate on each side, showing the full shape of the distribution including multimodality, skewness, and density concentration. Wider sections of the violin indicate more observations at that value. Violin plots are particularly useful when comparing distributions across subgroups to identify differences in shape, not just location and spread.</p>
+
+  <h2>Kernel Density Estimate (KDE) Plot</h2>
+
+  <p>A smooth nonparametric density estimate using a Gaussian kernel with Silverman's bandwidth h = 0.9 &times; min(s, IQR/1.34) &times; n<span class="superscript">&minus;1/5</span>. The KDE does not assume any parametric form and reveals features of the process distribution (asymmetry, multiple modes, shoulder peaks) that the histogram may obscure due to binning. Specification limit lines are overlaid for capability assessment.</p>
+
+  <h2>Summary Report Chart</h2>
+
+  <p>A multi-panel composite chart that combines the histogram with capability overlay, normal Q-Q plot, run chart, and a text panel of key capability statistics in a single graphic. This is designed for inclusion in quality reports and management presentations where a single-page visual summary of the capability study is required.</p>
+
+  <h2>Six-Pack Chart</h2>
+
+  <p>The six-pack (inspired by the Minitab Process Capability Sixpack) arranges six standard diagnostic panels in a 2 &times; 3 or 3 &times; 2 grid: (1) run chart, (2) Individuals control chart, (3) Moving Range chart, (4) capability histogram with normal curve and spec limits, (5) normal probability plot, and (6) a capability indices summary table. The six-pack is the standard deliverable for AIAG-compliant capability studies and provides a comprehensive, self-contained analysis of both stability and capability.</p>
+
+  <h1>Validation and Error Messages</h1>
+
+  <p>The procedure validates all inputs before analysis. Any validation warnings or non-fatal errors are collected and displayed as a <span class="screen">Process Capability: Warnings</span> pivot table in the SPSS Output Viewer. Fatal errors that prevent analysis from proceeding are also shown there and stop execution immediately. All messages appear in the Output Viewer; the Syntax Editor window does not receive procedure messages.</p>
+
+  <p>Common validation messages include: no process variables specified; no specification limit provided (LSL and USL both absent); LSL greater than or equal to USL; fewer than 2 non-missing observations for a variable; sigma multiplier outside the valid range (must be &gt; 0); confidence level outside (0, 1); and target value specified without both LSL and USL (required for Cpm). Warnings (non-fatal) are issued when a variable has fewer than 30 observations, when the normality tests indicate significant departures from normality, when outliers are detected, or when the Box-Cox transformation cannot converge.</p>
+
+  <h1>Syntax</h1>
+
+  <p>The full command syntax is:</p>
+
+  <p><span class="codeblock">STATS PROCESS CAPABILITY VARIABLE = varlist [GROUPVAR = varname]<br>
+  &nbsp;/CRITERIA LSL = number USL = number [TARGET = number]<br>
+  &nbsp;&nbsp;&nbsp;[SIGMA = {3|4|6|number}] [CONFIDENCE = number]<br>
+  &nbsp;&nbsp;&nbsp;[SIGMAMETHOD = {POOLED|RBAR|SBAR|MRBAR}]<br>
+  &nbsp;/STATISTICS [NORMALITY = {YES|NO}] [PPM = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[CPM = {YES|NO}] [ZBENCH = {YES|NO}] [DPMO = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[YIELD = {YES|NO}] [SKEWNESS = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[PERCENTILES = {YES|NO}] [CONTROLIMR = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[OUTLIERS = {YES|NO}] [CIMEAN = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[CISTD = {YES|NO}] [CICPK = {YES|NO}]<br>
+  &nbsp;/OPTIONS [BOXCOX = {YES|NO}] [BENCHMARK = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[REPORTCARD = {YES|NO}]<br>
+  &nbsp;/CHARTS [CHARTS = {YES|NO}] [HISTOGRAM = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[NORMALPROB = {YES|NO}] [CAPABILITY = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[RUN = {YES|NO}] [BOXPLOT = {YES|NO}] [SUMMARY = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[IMR = {YES|NO}] [VIOLIN = {YES|NO}] [KDE = {YES|NO}]<br>
+  &nbsp;&nbsp;&nbsp;[SIXPACK = {YES|NO}]<br>
+  &nbsp;/DATADIST [DATADIST = {YES|NO}] [DISTALPHA = number]<br>
+  &nbsp;&nbsp;&nbsp;[DIST3P = {YES|NO}] [DISTTRANSFORM = {YES|NO}]<br>
+  &nbsp;/REPORT [PREPAREDBY = "text"] [REVIEWEDBY = "text"]<br>
+  &nbsp;&nbsp;&nbsp;[COMPANY = "text"] [LOGOPATH = "filepath"]<br>
+  &nbsp;&nbsp;&nbsp;[EXPORTLOGS = {YES|NO}]<br>
+  &nbsp;/GENERATE [GENERATE = {YES|NO}] [SAMPLESIZE = n]<br>
+  &nbsp;&nbsp;&nbsp;[MEAN = number] [STDEV = number].</span></p>
+
+  <p>Example &mdash; basic capability analysis with histogram and HTML report:</p>
+
+  <p><span class="codeblock">STATS PROCESS CAPABILITY VARIABLE = diameter<br>
+  &nbsp;/CRITERIA LSL = 49.5 USL = 50.5 TARGET = 50.0 SIGMA = 6 CONFIDENCE = 0.95<br>
+  &nbsp;/STATISTICS NORMALITY = YES PPM = YES ZBENCH = YES YIELD = YES CICPK = YES<br>
+  &nbsp;/OPTIONS REPORTCARD = YES BENCHMARK = YES<br>
+  &nbsp;/CHARTS HISTOGRAM = YES NORMALPROB = YES SIXPACK = YES<br>
+  &nbsp;/REPORT PREPAREDBY = "J. Smith" COMPANY = "Acme Corp".</span></p>
+
+  <h1>Acknowledgements</h1>
+
+  <p>This procedure uses the following R packages: <span class="name">fitdistrplus</span> (distribution fitting, Delignette-Muller and Dutang), <span class="name">MASS</span> (Box-Cox estimation, Venables and Ripley), <span class="name">nortest</span> (Anderson-Darling and Lilliefors tests, Gross and Ligges), <span class="name">moments</span> (Jarque-Bera test, Komsta and Novomestky), <span class="name">ggplot2</span> (chart rendering, Wickham), <span class="name">gridExtra</span> (multi-panel chart layouts), and <span class="name">qcc</span> (control chart computations, Scrucca).</p>
+
+  <h1>References</h1>
+
+  <p>AIAG (2010). <i>Measurement System Analysis Reference Manual</i>, 4th edition. Automotive Industry Action Group.</p>
+
+  <p>AIAG (2010). <i>Statistical Process Control Reference Manual</i>, 2nd edition. Automotive Industry Action Group.</p>
+
+  <p>Box, G. E. P. and Cox, D. R. (1964). An analysis of transformations. <i>Journal of the Royal Statistical Society, Series B</i>, 26(2), 211&ndash;252.</p>
+
+  <p>ISO 22514-2:2013. <i>Statistical methods in process management &mdash; Capability and performance &mdash; Part 2: Process capability and performance of time-dependent process models</i>. International Organisation for Standardisation.</p>
+
+  <p>Montgomery, D. C. (2020). <i>Introduction to Statistical Quality Control</i>, 8th edition. John Wiley &amp; Sons.</p>
+
+  <p>Pearn, W. L. and Kotz, S. (2006). <i>Encyclopedia and Handbook of Process Capability Indices</i>. World Scientific.</p>
+
+  <p>Taguchi, G., Elsayed, E. A. and Hsiang, T. (1989). <i>Quality Engineering in Production Systems</i>. McGraw-Hill.</p>
+
+  <p>Vännman, K. (1995). A unified approach to capability indices. <i>Statistica Sinica</i>, 5, 805&ndash;820.</p>
+
+  <p style="font-size:80%;">
+  &copy; Copyright IBM Corp. 2025, 2026</p>
+
+</body>
+</html>

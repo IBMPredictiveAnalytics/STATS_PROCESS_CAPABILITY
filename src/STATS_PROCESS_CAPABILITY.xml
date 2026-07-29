@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ************************************************************************
+     Licensed Materials - Property of IBM
+     IBM SPSS Products: Statistics Common
+     (C) Copyright IBM Corp. 2026
+************************************************************************ -->
+
+<Command xmlns="http://xml.spss.com/spss/extension"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xml.spss.com/spss/extension http://xml.spss.com/spss/extension/SyntaxSchema.xsd"
+         Name="STATS PROCESS CAPABILITY"
+         Language="R"
+         IsArbitrary="No"
+         EndRequired="None">
+
+    <Subcommand Name="">
+        <Parameter Name="VARIABLE"    ParameterType="VariableNameList" Occurrence="Optional"/>
+        <Parameter Name="GROUPVAR"    ParameterType="VariableName" Occurrence="Optional"/>
+    </Subcommand>
+
+    <Subcommand Name="CRITERIA">
+        <Parameter Name="LSL"         ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="USL"         ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="TARGET"      ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="SIGMA"       ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="CONFIDENCE"  ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="SIGMAMETHOD" ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>POOLED</EnumValue>
+            <EnumValue>RBAR</EnumValue>
+            <EnumValue>SBAR</EnumValue>
+            <EnumValue>MRBAR</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+    <Subcommand Name="STATISTICS">
+        <Parameter Name="NORMALITY"   ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="PPM"         ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CPM"         ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="ZBENCH"      ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="DPMO"        ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="YIELD"       ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="SKEWNESS"    ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="PERCENTILES" ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CONTROLIMR"  ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="OUTLIERS"    ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CIMEAN"      ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CISTD"       ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CICPK"       ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+    <Subcommand Name="OPTIONS">
+        <Parameter Name="BOXCOX"      ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="BENCHMARK"   ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="REPORTCARD"  ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+    <Subcommand Name="GENERATE">
+        <Parameter Name="GENERATE"    ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="SAMPLESIZE"  ParameterType="Integer"      Occurrence="Optional"/>
+        <Parameter Name="MEAN"        ParameterType="Number"       Occurrence="Optional"/>
+        <Parameter Name="STDEV"       ParameterType="Number"       Occurrence="Optional"/>
+    </Subcommand>
+
+    <Subcommand Name="CHARTS">
+        <Parameter Name="CHARTS"      ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="HISTOGRAM"   ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="NORMALPROB"  ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="CAPABILITY"  ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="RUN"         ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="BOXPLOT"     ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="SUMMARY"     ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="IMR"         ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="VIOLIN"      ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="KDE"         ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="SIXPACK"     ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+    <Subcommand Name="REPORT">
+        <Parameter Name="PREPAREDBY"  ParameterType="QuotedString" Occurrence="Optional"/>
+        <Parameter Name="REVIEWEDBY"  ParameterType="QuotedString" Occurrence="Optional"/>
+        <Parameter Name="COMPANY"     ParameterType="QuotedString" Occurrence="Optional"/>
+        <Parameter Name="LOGOPATH"    ParameterType="QuotedString" Occurrence="Optional"/>
+        <Parameter Name="EXPORTLOGS"  ParameterType="Keyword"      Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+    <Subcommand Name="DATADIST">
+        <Parameter Name="DATADIST"      ParameterType="Keyword"  Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="DISTALPHA"     ParameterType="Number"   Occurrence="Optional"/>
+        <Parameter Name="DIST3P"        ParameterType="Keyword"  Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+        <Parameter Name="DISTTRANSFORM" ParameterType="Keyword"  Occurrence="Optional">
+            <EnumValue>YES</EnumValue>
+            <EnumValue>NO</EnumValue>
+        </Parameter>
+    </Subcommand>
+
+</Command>

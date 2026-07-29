@@ -1,0 +1,20 @@
+Name: STATS PROCESS CAPABILITY
+Display-Name: Process Capability Analysis
+Dialog-Specs: STATS_PROCESS_CAPABILITY.cfe,STATS_PROCESS_CAPABILITY.spd
+Command-Specs: STATS_PROCESS_CAPABILITY.xml
+Code-Files: STATS_PROCESS_CAPABILITY.R
+Misc-Files: STATS_PROCESS_CAPABILITY.htm
+Summary: Process Capability Analysis with comprehensive charts and sta
+ tistics
+Description: Comprehensive process capability analysis including Cp, C
+ pk, Pp, Ppk, Cpm indices, normality tests, performance metrics (PPM, 
+ DPMO, Yield), and six professional charts. Supports data generation f
+ or testing and displays data preview. All charts automatically appear
+  in SPSS Viewer.
+Author: Aruna Saraswathy
+Version: 1.0.0
+Product-Version: 24
+Date: 2026-07-11
+Plugins: R
+R-Packages:  qcc,nortest, png, jpeg, e1071
+Translation-Catalogues: STATS_PROCESS_CAPABILITY
